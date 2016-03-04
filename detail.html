@@ -166,30 +166,7 @@ http.onreadystatechange = function() {//Call a function when the state changes.
 			if(id == result[x].number){
 			temp.push("<tr>");
 			temp.push("<td><a href='detail.html?n="+result[x].number+"'>"+result[x].number+"</td>");
-/*
-			temp.push("<td>"+result[x].source+"</td>");
-			temp.push("<td>"+result[x].takenby+"</td>");
-			temp.push("<td>"+result[x].sequence+"</td>");
-			temp.push("<td>"+result[x].excavator+"</td>");
-			temp.push("<td>"+result[x].ephone+"</td>");
-			temp.push("<td>"+result[x].ename+"</td>");
-			temp.push("<td>"+result[x].eaddress+"</td>");
-			temp.push("<td>"+result[x].ecity+"</td>");
-			temp.push("<td>"+result[x].estate+"</td>");
-			temp.push("<td>"+result[x].ezip+"</td>");
-			temp.push("<td>"+result[x].efax+"</td>");
-			temp.push("<td>"+result[x].ecaller+"</td>");
-			temp.push("<td>"+result[x].ecallerphone+"</td>");
-			temp.push("<td>"+result[x].ecallerphoneextension+"</td>");
-			temp.push("<td>"+result[x].ecalleremail+"</td>");
-			temp.push("<td>"+result[x].econtact+"</td>");
-			temp.push("<td>"+result[x].econtactphone+"</td>");
-			temp.push("<td>"+result[x].econtactphoneextension+"</td>");
-			temp.push("<td>"+result[x].econtactemail+"</td>");
-			temp.push("<td>"+result[x].ecallback+"</td>");
-			temp.push("<td>"+result[x].emailcopytocaller+"</td>");
-			temp.push("<td>"+result[x].faxcopytocaller+"</td>");
-*/
+//only really need the ticket number,lat,long,workareabuffer. I grab a bunch because planned to show all on this page, not the list on first page.
 			temp.push("<td>"+result[x].tickettype+"</td>");
 			temp.push("<td>"+result[x].worktype+"</td>");
 			temp.push("<td>"+result[x].workstate+"</td>");
@@ -202,36 +179,10 @@ http.onreadystatechange = function() {//Call a function when the state changes.
 			temp.push("<td>"+result[x].workstreettype+"</td>");
 			temp.push("<td>"+result[x].workstreetsuffix+"</td>");
 			temp.push("<td>"+result[x].workintersection+"</td>");
-/*
-			temp.push("<td>"+result[x].callersuppliedpoints+"</td>");
-			temp.push("<td>"+result[x].latitude+"</td>");
-			temp.push("<td>"+result[x].longitude+"</td>");
-*/
 			m = L.marker([result[x].latitude,result[x].longitude]).addTo(map);
 			map.setView(m._latlng,18);
-			
-/*
-			temp.push("<td>"+result[x].secondarylat+"</td>");
-			temp.push("<td>"+result[x].secondarylong+"</td>");
-			temp.push("<td>"+result[x].viewareaextent+"</td>");
-			temp.push("<td>"+result[x].workareaextent);
-			temp.push("<td>"+result[x].workarea+"</td>");
-*/
 			buffer = result[x].workareabuffer;
-/*
-			temp.push("<td>"+result[x].workdonefor+"</td>");
-			temp.push("<td>"+result[x].compliance+"</td>");
-			temp.push("<td>"+result[x].extent+"</td>");
-			temp.push("<td>"+result[x].drivingdirections+"</td>");
-			temp.push("<td>"+result[x].markinginstructions+"</td>");
-			temp.push("<td>"+result[x].remarks+"</td>");
-			temp.push("<td>"+result[x].iswhitepaint+"</td>");
-			temp.push("<td>"+result[x].isexplosives+"</td>");
-			temp.push("<td>"+result[x].isaddressinremarks+"</td>");
-			temp.push("<td>"+result[x].isdirectionalboring+"</td>");
-			temp.push("<td>"+result[x].isgridcallersupplied+"</td>");
-			temp.push("<td>"+result[x].creation+"</td>");
-*/
+
 			temp.push("</tr>");
 			
 			omnivore.wkt.parse(buffer).addTo(map);
