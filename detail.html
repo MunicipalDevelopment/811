@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<head><title>811</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+    
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link href="css/caramel.min.css" rel="stylesheet" type="text/css">
+<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.5/esri-leaflet.js"></script>
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-renderers/v0.0.1-beta.2/esri-leaflet-renderers.js"></script>
+<script src='http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+
+<style>
+
+#map{	height: 100vh;
+}
+
+</style>
+</head>
+
+
+<body>
+<br><br>
+
+
+<div class="row">
+
+
+    <div class="box col-6">
+    <div class="panel info">
+    <div class="panel-head">Map</div>
+    <div class="panel-body" id ="map"></div>
+    </div>
+    </div>
+    
+    <div class="box col-6" id="form">
+	
+<h3>Response</h3>
+Comment: <input type="text" id="comment"><br>
+Action:   &nbsp;&nbsp;&nbsp;&nbsp;
+	<select id="action" width="350" style="width: 350px">
+ 		 <option value="NO RESPONSE PROVIDED">NO RESPONSE PROVIDED</option>
+ 		 <option value="UFO CLEARED">UFO CLEARED</option>
+ 		 <option value="SITE MARKED">SITE MARKED</option>
+ 		 <option value="PRIVATELY OWNED FACILITY">PRIVATELY OWNED FACILITY</option>
+		<option value="NO ACCESS/NOT MARKED/CALL UFO">NO ACCESS/NOT MARKED/CALL UFO</option>
+		<option value="SPOTTED PER WORK PLAN">SPOTTED PER WORK PLAN</option>
+		<option value="CONFERENCE SCHEDULED">CONFERENCE SCHEDULED</option>
+		<option value="NOT MARKED/CALL UFO">NOT MARKED/CALL UFO</option>
+		<option value="BAD ADDRESS/NOT MARKED">BAD ADDRESS/NOT MARKED</option>
+		<option value="SITE MARKED/NOT WHITELINED">SITE MARKED/NOT WHITELINED</option>
+		</select>
+	 <br> <input type="submit" class="btn info" onclick="submitResponse()"></div>
+    
+       
+
+
+ 
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+var code="MyCode";
+var facilities="MyFacility";
+var action ="";
+var comment="NA";
+
+
+
+
+
+
+
+function submitResponse(){
+	var c = document.getElementById("comment").value;
+	var a = document.getElementById("action");
+	var act = a.options[a.selectedIndex].value;
+	var thexml='<locateResponses xmlns="http://schemas.progressivepartnering.com/geocall/v3/response/v1"><auth user="MyAPIName" password="MyAPIPassword" /><responses><response><ticket>'+id+'</ticket><code>COA</code><facilities>Traffic</facilities><action>'+act+'</action><comment>'+c+'</comment><result></result></response></responses></locateResponses>'
+	var url = "https://geocall.nm811.org/MyEndpoint";
+	console.log(thexml);
+	var http=new XMLHttpRequest();
+	http.open("POST", url, true);
+	http.setRequestHeader("Content-Type", "text/xml");
+	
+	http.onreadystatechange = function() {//Call a function when the state changes.
+		if(http.readyState == 4 && http.status == 200) {
+		
+			console.log(http.responseText);
+
+		}
+		}
+
+
+		http.send(thexml);
+
+
+
+
+
+}//submitResponse()
+
+
+
+
+
+var params = {};
+
+if (location.search) {
+    var parts = location.search.substring(1).split('&');
+    for (var i = 0; i < parts.length; i++) {
+        var nv = parts[i].split('=');
+        if (!nv[0]) continue;
+        params[nv[0]] = nv[1] || true;
+    }
+}
+
+
+var id = params.n;
+
+
+
+var map = L.map('map', {
+		center: [35.10418, -106.62987],
+		zoom:10
+	});
+
+
+L.esri.basemapLayer("Gray").addTo(map);
+
+
+var result;
+var temp=[];
+var buffer;
+
+
+
+var url = "http://MyServer:8811";
+
+http=new XMLHttpRequest();
+http.open("GET", url, true);
+http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+http.onreadystatechange = function() {//Call a function when the state changes.
+	if(http.readyState == 4 && http.status == 200) {
+		
+		result= JSON.parse(http.responseText);
+		
+		for( var x = 0; x <result.length; x++){
+
+			if(id == result[x].number){
+			temp.push("<tr>");
+			temp.push("<td><a href='detail.html?n="+result[x].number+"'>"+result[x].number+"</td>");
+/*
+			temp.push("<td>"+result[x].source+"</td>");
+			temp.push("<td>"+result[x].takenby+"</td>");
+			temp.push("<td>"+result[x].sequence+"</td>");
+			temp.push("<td>"+result[x].excavator+"</td>");
+			temp.push("<td>"+result[x].ephone+"</td>");
+			temp.push("<td>"+result[x].ename+"</td>");
+			temp.push("<td>"+result[x].eaddress+"</td>");
+			temp.push("<td>"+result[x].ecity+"</td>");
+			temp.push("<td>"+result[x].estate+"</td>");
+			temp.push("<td>"+result[x].ezip+"</td>");
+			temp.push("<td>"+result[x].efax+"</td>");
+			temp.push("<td>"+result[x].ecaller+"</td>");
+			temp.push("<td>"+result[x].ecallerphone+"</td>");
+			temp.push("<td>"+result[x].ecallerphoneextension+"</td>");
+			temp.push("<td>"+result[x].ecalleremail+"</td>");
+			temp.push("<td>"+result[x].econtact+"</td>");
+			temp.push("<td>"+result[x].econtactphone+"</td>");
+			temp.push("<td>"+result[x].econtactphoneextension+"</td>");
+			temp.push("<td>"+result[x].econtactemail+"</td>");
+			temp.push("<td>"+result[x].ecallback+"</td>");
+			temp.push("<td>"+result[x].emailcopytocaller+"</td>");
+			temp.push("<td>"+result[x].faxcopytocaller+"</td>");
+*/
+			temp.push("<td>"+result[x].tickettype+"</td>");
+			temp.push("<td>"+result[x].worktype+"</td>");
+			temp.push("<td>"+result[x].workstate+"</td>");
+			temp.push("<td>"+result[x].workcounty+"</td>");
+			temp.push("<td>"+result[x].workplace+"</td>");
+			temp.push("<td>"+result[x].workon+"</td>");
+			temp.push("<td>"+result[x].workstreetaddress+"</td>");
+			temp.push("<td>"+result[x].workstreetprefix+"</td>");
+			temp.push("<td>"+result[x].workstreetname+"</td>");
+			temp.push("<td>"+result[x].workstreettype+"</td>");
+			temp.push("<td>"+result[x].workstreetsuffix+"</td>");
+			temp.push("<td>"+result[x].workintersection+"</td>");
+/*
+			temp.push("<td>"+result[x].callersuppliedpoints+"</td>");
+			temp.push("<td>"+result[x].latitude+"</td>");
+			temp.push("<td>"+result[x].longitude+"</td>");
+*/
+			m = L.marker([result[x].latitude,result[x].longitude]).addTo(map);
+			map.setView(m._latlng,18);
+			
+/*
+			temp.push("<td>"+result[x].secondarylat+"</td>");
+			temp.push("<td>"+result[x].secondarylong+"</td>");
+			temp.push("<td>"+result[x].viewareaextent+"</td>");
+			temp.push("<td>"+result[x].workareaextent);
+			temp.push("<td>"+result[x].workarea+"</td>");
+*/
+			buffer = result[x].workareabuffer;
+/*
+			temp.push("<td>"+result[x].workdonefor+"</td>");
+			temp.push("<td>"+result[x].compliance+"</td>");
+			temp.push("<td>"+result[x].extent+"</td>");
+			temp.push("<td>"+result[x].drivingdirections+"</td>");
+			temp.push("<td>"+result[x].markinginstructions+"</td>");
+			temp.push("<td>"+result[x].remarks+"</td>");
+			temp.push("<td>"+result[x].iswhitepaint+"</td>");
+			temp.push("<td>"+result[x].isexplosives+"</td>");
+			temp.push("<td>"+result[x].isaddressinremarks+"</td>");
+			temp.push("<td>"+result[x].isdirectionalboring+"</td>");
+			temp.push("<td>"+result[x].isgridcallersupplied+"</td>");
+			temp.push("<td>"+result[x].creation+"</td>");
+*/
+			temp.push("</tr>");
+			
+			omnivore.wkt.parse(buffer).addTo(map);
+		}
+
+		}//for
+		
+	
+			
+	
+}
+}
+
+
+
+
+
+
+
+
+
+http.send();
+
+var itsbuff = L.esri.dynamicMapLayer('http://MyServer:6080/arcgis/rest/services/AnotherLayer/MapServer',{layers:[16],opacity:.5}).addTo(map);
+
+var its = L.esri.dynamicMapLayer('http://MyServer:6080/arcgis/rest/services/ALayer/MapServer').addTo(map);
+
+
+</script>
+
+
+<script src="js/jquery.min.js"></script>
+    <script src="js/caramel.js"></script>
+</body></html>
