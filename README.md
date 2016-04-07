@@ -1,7 +1,6 @@
 # 811: NM One Call
 
-NMOneCall (811) is a service which notifies subscribers when someone is going to dig. It allows us to line spot our utilities to make sure nothing is hit. They have
-moved from TelDig to a new system. This new system has a different ticket format and an API. The code in the repo handles the ticket parsing, includes a front end, and sends results to the API.
+NMOneCall (811) is a service which notifies subscribers when someone is going to dig. It allows us to line spot our utilities to prevent damage. 811 has moved from TelDig to a new system with a different ticket format and an API. The code in the repo handles the ticket parsing, includes a front end, and sends results to the API.
 
 Parse811.py is a python script to parse the XML tickets and send them to the DB. This should run at an interval.
 
