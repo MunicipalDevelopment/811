@@ -8,4 +8,4 @@ Index.html is the main entrance to the front end. It is a table of tickets from 
 
 Submitting the form connects to the GoServer and sends the data to NMOneCall. Currently, they do not allow CORS so it has to happen server side. I have put in a request to change this.
 
-Application needs to update the DB on success with resolution and success. Then remove from the table on the main page (only display open tickets). Failures can be handle any way you would like.
+Application needs to update the DB on success with resolution and success. Then remove from the table on the main page (only display open tickets). Failures can be handle any way you would like. (this is an open issue)
