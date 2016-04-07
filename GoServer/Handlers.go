@@ -1,24 +1,62 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
 	_ "github.com/denisenkom/go-mssqldb"
 )
 
+func POSTclose811(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	r.ParseForm()
+
+	var body bytes.Buffer
+	body.WriteString(r.Form.Get("locateresponse"))
+
+	client := &http.Client{}
+
+	req, err := http.NewRequest("POST", "https://geocall.nm811.org/geocall/api/app/response/bulk", bytes.NewBuffer([]byte(body.String())))
+	if err != nil {
+		//	fmt.Println(err)
+	}
+
+	req.Header.Add("Content-Type", "text/xml; charset=utf-8")
+
+	// now POST it
+	resp, err := client.Do(req)
+	if err != nil {
+		//fmt.Println(err)
+	}
+
+	defer resp.Body.Close()
+	contents, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		//	fmt.Printf("%s", err)
+		//	os.Exit(1)
+
+	}
+
+	c := string(contents)
+
+	fmt.Fprintln(w, c)
+}
+
 func IndexGET(w http.ResponseWriter, r *http.Request) {
-	//	fmt.Fprintln(w, "GET")
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	db, err := sql.Open("mssql", "server=MyServer;user id=ORG\\me;password=MyPassword;database=MyDB")
+	db, err := sql.Open("mssql", "server=MyServer;user id=domain\\username;password=itsasecret;database=MyDB")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	//probably not best idea, but it works and easy.
+
 	var (
 		number                 string
 		source                 string
@@ -159,19 +197,4 @@ func IndexGET(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-//code for post,delete and put can be provided upon request - or check https://github.com/PaulCrickard/Go/tree/master/RESTserver
-func IndexPOST(w http.ResponseWriter, r *http.Request) {
-	//set SQL query to insert.
-}
-
-func IndexDELETE(w http.ResponseWriter, r *http.Request) {
-	//Set SQL delete
-}
-
-func IndexPUT(w http.ResponseWriter, r *http.Request) {
-
-	//set SQL to update
-
 }

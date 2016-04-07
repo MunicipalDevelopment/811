@@ -13,28 +13,15 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		"IndexPUT",
-		"PUT",
-		"/{id}",
-		IndexPUT,
+		"POSTclose811",
+		"POST",
+		"/",
+		POSTclose811,
 	},
 	Route{
 		"IndexGET",
 		"GET",
-
 		"/",
 		IndexGET,
-	},
-	Route{
-		"IndexPOST",
-		"POST",
-		"/",
-		IndexPOST,
-	},
-	Route{
-		"IndexDELETE",
-		"DELETE",
-		"/{id}",
-		IndexDELETE,
 	},
 }

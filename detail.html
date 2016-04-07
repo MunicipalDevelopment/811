@@ -4,7 +4,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta charset="UTF-8">
-    
+
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 <link href="css/caramel.min.css" rel="stylesheet" type="text/css">
 <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
@@ -30,9 +30,9 @@
     <div class="panel-body" id ="map"></div>
     </div>
     </div>
-    
+
     <div class="box col-6" id="form">
-	
+
 <h3>Response</h3>
 Comment: <input type="text" id="comment"><br>
 Action:   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -49,7 +49,7 @@ Action:   &nbsp;&nbsp;&nbsp;&nbsp;
 		<option value="SITE MARKED/NOT WHITELINED">SITE MARKED/NOT WHITELINED</option>
 		</select>
 	 <br> <input type="submit" class="btn info" onclick="submitResponse()"></div>
- 
+
 </div>
 
 <script>
@@ -66,23 +66,32 @@ function submitResponse(){
 	var c = document.getElementById("comment").value;
 	var a = document.getElementById("action");
 	var act = a.options[a.selectedIndex].value;
-	var thexml='<locateResponses xmlns="http://schemas.progressivepartnering.com/geocall/v3/response/v1"><auth user="MyAPIName" password="MyAPIPassword" /><responses><response><ticket>'+id+'</ticket><code>COA</code><facilities>Traffic</facilities><action>'+act+'</action><comment>'+c+'</comment><result></result></response></responses></locateResponses>'
+	var body='locateresponse=<locateResponses xmlns="http://schemas.progressivepartnering.com/geocall/v3/response/v1"><auth user="MyAPIName" password="MyAPIPassword" /><responses><response><ticket>'+id+'</ticket><code>COA</code><facilities>Traffic</facilities><action>'+act+'</action><comment>'+c+'</comment><result></result></response></responses></locateResponses>'
 	var url = "https://geocall.nm811.org/MyEndpoint";
 	console.log(thexml);
-	var http=new XMLHttpRequest();
-	http.open("POST", url, true);
-	http.setRequestHeader("Content-Type", "text/xml");
-	
-	http.onreadystatechange = function() {//Call a function when the state changes.
-		if(http.readyState == 4 && http.status == 200) {
-		
-			console.log(http.responseText);
+  var http=new XMLHttpRequest();
+ http.open("POST", url, true);
+ http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-		}
-		}
+ http.onreadystatechange = function() {//Call a function when the state changes.
+   if(http.readyState == 4 && http.status == 200) {
+     first = http.responseText.split("<result>");
+     second=first[1].split("</result>");
+     result = second[0];
+     console.log(result);
+     if(result.indexOf("Success") >-1){
+          alert(result);
+         //now insert in to DB and go back to page.
+         location.href="http://MyServer/811";
+     } else{alert(result);}
+     //Failed....
+     //Do something.
+   }
+   }
 
 
-		http.send(thexml);
+   http.send(body);
+
 
 }//submitResponse()
 
@@ -120,9 +129,9 @@ http.open("GET", url, true);
 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 http.onreadystatechange = function() {//Call a function when the state changes.
 	if(http.readyState == 4 && http.status == 200) {
-		
+
 		result= JSON.parse(http.responseText);
-		
+
 		for( var x = 0; x <result.length; x++){
 
 			if(id == result[x].number){
@@ -146,7 +155,7 @@ http.onreadystatechange = function() {//Call a function when the state changes.
 			buffer = result[x].workareabuffer;
 
 			temp.push("</tr>");
-			
+
 			omnivore.wkt.parse(buffer).addTo(map);
 		}
 

@@ -1,13 +1,12 @@
 # 811: NM One Call
 
-Tickets sent from NMOneCall when someone wants to dig. Need to respond and possibly line spot the utilities to make sure they will not be hit.
+NMOneCall (811) is a service which notifies subscribers when someone is going to dig. It allows us to line spot our utilities to make sure nothing is hit. They have
+moved from TelDig to a new system. This new system has a different ticket format and an API. The code in the repo handles the ticket parsing, includes a front end, and sends results to the API.
 
-The Parse811.py file will load tickets from a directory in to a database. Set this to run at interval.
-You need a DB table to dump it in.
+Parse811.py is a python script to parse the XML tickets and send them to the DB. This should run at an interval.
 
-Publish the table as a REST Endpoint. This code will be available later.
+Index.html is the main entrance to the front end. It is a table of tickets from the DB. Selecting a ticket will take you to detail.html. This page will display the location of the ticket and a form to add comments and the resolution.
 
-Consume REST in webpage. The webpage has a list of tickets(index.html) and each links to detail.html. This shows a map, layers you need and a form to post your response/close ticket.
+Submitting the form connects to the GoServer and sends the data to NMOneCall. Currently, they do not allow CORS so it has to happen server side. I have put in a request to change this.
 
-This system was built due to changes in the 811 ticketing system that made it incompatible with our system - changes to the file structure of tickets and new API for responding/closing.
-
+Application needs to update the DB on success with resolution and success. Then remove from the table on the main page (only display open tickets). Failures can be handle any way you would like.
